@@ -1,24 +1,29 @@
+import menCategory from "../assets/men-category.png"
+import womenCategory from "../assets/women-category.png"
+import accessoriesCategory from "../assets/accessories-category.png"
+import kidsCategory from "../assets/kids-category.png"
+
 export default function EditorsPick() {
     const categories = [
         {
             id: 1,
             title: "MEN",
-            image: "/src/assets/men-category.png",
+            image: menCategory,
         },
         {
             id: 2,
             title: "WOMEN",
-            image: "/src/assets/women-category.png",
+            image: womenCategory,
         },
         {
             id: 3,
             title: "ACCESSORIES",
-            image: "/src/assets/accessories-category.png",
+            image: accessoriesCategory,
         },
         {
             id: 4,
             title: "KIDS",
-            image: "/src/assets/kids-category.png",
+            image: kidsCategory,
         }
     ]
 

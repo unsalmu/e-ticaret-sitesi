@@ -1,3 +1,5 @@
+import neuralCouple from "../assets/neural-universe-couple.png"
+
 export default function NeuralUniverse() {
     return (
       <section className="pt-0 pb-16 px-4 bg-gray-50">
@@ -43,7 +45,7 @@ export default function NeuralUniverse() {
             <div className="flex-1 order-2 md:order-1 w-full pl-[42px] pr-4 md:px-0 md:pl-8 lg:pl-12 xl:pl-16">
               <div className="relative">
                 <img
-                  src="/src/assets/neural-universe-couple.png"
+                  src={neuralCouple}
                   alt="Couple wearing plaid clothing"
                   className="w-full h-auto object-cover rounded-lg"
                 />

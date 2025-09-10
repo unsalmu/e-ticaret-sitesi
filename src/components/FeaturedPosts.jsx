@@ -1,11 +1,14 @@
 import BlogCard from './BlogCard'
+import blog1 from "../assets/blog-1.png"
+import blog2 from "../assets/blog-2.png"
+import blog3 from "../assets/blog-3.png"
 
 export default function FeaturedPosts() {
   // Sample blog posts data
   const posts = [
     {
       id: 1,
-      image: "/src/assets/blog-1.png",
+      image: blog1,
       isNew: true,
       tags: {
         primary: "Google",
@@ -20,7 +23,7 @@ export default function FeaturedPosts() {
     },
     {
       id: 2, 
-      image: "/src/assets/blog-2.png",
+      image: blog2,
       isNew: true,
       tags: {
         primary: "Google",
@@ -35,7 +38,7 @@ export default function FeaturedPosts() {
     },
     {
       id: 3,
-      image: "/src/assets/blog-3.png", 
+      image: blog3, 
       isNew: true,
       tags: {
         primary: "Google",

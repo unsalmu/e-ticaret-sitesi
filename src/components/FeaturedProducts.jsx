@@ -1,4 +1,12 @@
 import ProductCard from './ProductCard'
+import product1 from "../assets/product-1.png"
+import product2 from "../assets/product-2.png"
+import product3 from "../assets/product-3.png"
+import product4 from "../assets/product-4.png"
+import product5 from "../assets/product-5.png"
+import product6 from "../assets/product-6.png"
+import product7 from "../assets/product-7.png"
+import product8 from "../assets/product-8.png"
 
 export default function FeaturedProducts() {
   // Sample data - Bu verileri gerçek API'dan alacaksınız
@@ -7,7 +15,7 @@ export default function FeaturedProducts() {
       id: 1,
       name: "Graphic Design",
       department: "English Department", 
-      image: "/src/assets/product-1.png",
+      image: product1,
       originalPrice: "16.48",
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -16,7 +24,7 @@ export default function FeaturedProducts() {
       id: 2,
       name: "Graphic Design",
       department: "English Department",
-      image: "/src/assets/product-2.png", 
+      image: product2, 
       originalPrice: "16.48",
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -25,7 +33,7 @@ export default function FeaturedProducts() {
       id: 3,
       name: "Graphic Design", 
       department: "English Department",
-      image: "/src/assets/product-3.png",
+      image: product3,
       originalPrice: "16.48",
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -34,7 +42,7 @@ export default function FeaturedProducts() {
       id: 4,
       name: "Graphic Design",
       department: "English Department",
-      image: "/src/assets/product-4.png",
+      image: product4,
       originalPrice: "16.48", 
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -43,7 +51,7 @@ export default function FeaturedProducts() {
       id: 5,
       name: "Graphic Design",
       department: "English Department",
-      image: "/src/assets/product-5.png",
+      image: product5,
       originalPrice: "16.48",
       price: "6.48", 
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -52,7 +60,7 @@ export default function FeaturedProducts() {
       id: 6,
       name: "Graphic Design",
       department: "English Department",
-      image: "/src/assets/product-6.png",
+      image: product6,
       originalPrice: "16.48",
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -61,7 +69,7 @@ export default function FeaturedProducts() {
       id: 7,
       name: "Graphic Design", 
       department: "English Department",
-      image: "/src/assets/product-7.png",
+      image: product7,
       originalPrice: "16.48",
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
@@ -70,7 +78,7 @@ export default function FeaturedProducts() {
       id: 8,
       name: "Graphic Design",
       department: "English Department", 
-      image: "/src/assets/product-8.png",
+      image: product8,
       originalPrice: "16.48",
       price: "6.48",
       colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"]
