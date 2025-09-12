@@ -41,8 +41,8 @@ export default function Header() {
         <>
             <header className="fixed top-0 left-0 z-40 w-full bg-white">
                 {/* TOPBAR (desktop only) */}
-                <div className="hidden md:flex items-center justify-between px-4 
-                lg:px-8 py-2 bg-[#2d2f3a] font-bold text-white text-xs">
+                <div className="hidden md:flex items-center justify-between px-16 
+                lg:px-16 py-2 bg-[#2d2f3a] font-bold text-white text-xs">
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-2">
                             <Phone className="w-4 h-4" />
@@ -76,9 +76,9 @@ export default function Header() {
                 </div>
 
                 {/* NAVBAR */}
-                <div className="flex items-center justify-between w-full px-4 py-3 bg-white">
+                <div className="flex items-center justify-between w-full px-16 py-3 bg-white">
                     {/* Left: Logo */}
-                    <Link to="/" className="font-bold text-3xl md:text-xl">
+                    <Link to="/" className="font-bold text-3xl md:text-2xl">
                         Bandage
                     </Link>
 
@@ -134,13 +134,13 @@ export default function Header() {
                                 onMouseLeave={handleShopLeave}
                             >
                                 {/* Tetikleyici */}
-                                <button
-                                    type="button"
+                                <Link
+                                    to="/shop"
                                     className="hover:text-black"
                                 >
                                     Shop
                                     <span className="text-gray-400">▾</span>
-                                </button>
+                                </Link>
 
                                 {/* DROPDOWN PANEL */}
                                 {shopOpen && (
@@ -253,6 +253,7 @@ export default function Header() {
                 {/* menu links */}
                 <nav className="flex flex-col gap-6 px-6 py-8 text-2xl text-gray-600 items-center text-center">
                     <Link to="/" className="hover:text-black">Home</Link>
+                    <Link to="/shop" className="font-medium hover:text-black">Shop</Link>
                     <Link to="/product" className="font-medium hover:text-black">Product</Link>
                     <Link to="/pricing" className="font-medium hover:text-black">Pricing</Link>
                     <Link to="/contact" className="font-medium hover:text-black">Contact</Link>

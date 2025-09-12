@@ -34,7 +34,7 @@ export default function NeuralUniverse() {
                 <button className="px-4 py-3 md:px-5 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 bg-[#23A6F0] md:bg-[#2DC071] text-white text-xs lg:text-sm xl:text-base font-bold rounded-[0.5px] md:rounded-[1px] hover:bg-[#23A6F0]/90 md:hover:bg-[#2DC071]/90 transition-colors">
                   BUY NOW
                 </button>
-                <button className="px-4 py-3 md:px-5 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 bg-gray-50 border-2 border-[#23A6F0] md:border-[#2DC071] text-[#23A6F0] md:text-[#2DC071] text-xs lg:text-sm xl:text-base font-bold rounded-[0.5px] md:rounded-[1px] hover:bg-[#23A6F0] md:hover:bg-[#2DC071] hover:text-white transition-colors" style={{borderColor: window.innerWidth >= 768 ? '#2DC071' : '#23A6F0'}}>
+                <button className="px-4 py-3 md:px-5 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 bg-gray-50 border-1 border-[#23A6F0] md:border-[#2DC071] text-[#23A6F0] md:text-[#2DC071] text-xs lg:text-sm xl:text-base font-bold rounded-[0.5px] md:rounded-[1px] hover:bg-[#23A6F0] md:hover:bg-[#2DC071] hover:text-white transition-colors">
                   <span className="md:hidden">LEARN MORE</span>
                   <span className="hidden md:inline">READ MORE</span>
                 </button>
