@@ -8,7 +8,7 @@ import product6 from "../assets/product-6.png"
 import product7 from "../assets/product-7.png"
 import product8 from "../assets/product-8.png"
 
-export default function FeaturedProducts() {
+export default function FeaturedProducts({ headerVariant = 'home', containerClass = 'bg-white' }) {
   // Sample data - Bu verileri gerçek API'dan alacaksınız
   const products = [
     {
@@ -86,20 +86,28 @@ export default function FeaturedProducts() {
   ]
 
   return (
-    <section className="py-16 px-10 md:px-4 bg-white">
+    <section className={`py-16 px-10 md:px-4 ${containerClass}`}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-sm text-gray-400 font-bold mb-2 tracking-wider">
-            Featured Products
-          </p>
-          <h2 className="text-2xl md:text-2xl font-bold text-gray-900 mb-4">
-            BESTSELLER PRODUCTS
-          </h2>
-          <p className="text-xs font-bold text-gray-400 max-w-md mx-auto">
-            Problems trying to resolve the conflict between
-          </p>
-        </div>
+        {headerVariant === 'home' && (
+          <div className="text-center mb-16">
+            <p className="text-sm text-gray-400 font-bold mb-2 tracking-wider">
+              Featured Products
+            </p>
+            <h2 className="text-2xl md:text-2xl font-bold text-gray-900 mb-4">
+              BESTSELLER PRODUCTS
+            </h2>
+            <p className="text-xs font-bold text-gray-400 max-w-md mx-auto">
+              Problems trying to resolve the conflict between
+            </p>
+          </div>
+        )}
+        {headerVariant === 'bestseller' && (
+          <div className="mb-6">
+            <h2 className="text-lg md:text-2xl font-bold text-gray-700 tracking-wider">BESTSELLER PRODUCTS</h2>
+            <div className="mt-3 border-t border-gray-200" />
+          </div>
+        )}
 
         {/* Products Grid - Mobile First Flex Layout */}
         <div className="flex flex-col">

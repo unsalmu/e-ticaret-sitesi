@@ -4,6 +4,7 @@ import './App.css'
 import Header from './Layout/Header'
 import HomePage from './pages/HomePage'
 import ShopPage from './pages/ShopPage'
+import ProductDetailsPage from './pages/ProductDetailsPage'
 import Footer from "./Layout/Footer"
 
 
@@ -14,7 +15,9 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />
+        <Route path="/product/:id" component={ProductDetailsPage} />
         <Route exact path="/shop" component={ShopPage} />
+        <Route exact path="/product" component={ProductDetailsPage} />
       </Switch>
       <Footer />
     </BrowserRouter>

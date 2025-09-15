@@ -1,18 +1,23 @@
+import { Link } from "react-router-dom"
+
 export default function ProductCard({ product }) {
     return (
-      <div className="flex flex-col bg-white group cursor-pointer">
+      <div className="flex flex-col bg-white group">
         {/* Product Image */}
-        <div 
-          className="relative overflow-hidden bg-gray-100 w-full h-96 md:h-72 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-          style={{ backgroundImage: `url(${product.image})` }}
-        >
-        </div>
+        <Link to={`/product/${product.id || ''}`} className="block">
+          <div 
+            className="relative overflow-hidden bg-gray-100 w-full h-96 md:h-72 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+            style={{ backgroundImage: `url(${product.image})` }}
+          />
+        </Link>
   
         {/* Product Info */}
         <div className="flex flex-col items-center text-center p-6 flex-1">
           {/* Product Name */}
           <h3 className="text-base font-bold text-gray-900 mb-2">
-            {product.name}
+            <Link to={`/product/${product.id || ''}`} className="hover:text-blue-500">
+              {product.name}
+            </Link>
           </h3>
   
           {/* Department */}
