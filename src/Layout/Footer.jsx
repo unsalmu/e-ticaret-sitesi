@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 export default function Footer() {
     const footerSections = [
         {
@@ -71,12 +73,21 @@ export default function Footer() {
                                 <ul className="space-y-2">
                                     {section.links.map((link, linkIndex) => (
                                         <li key={linkIndex}>
-                                            <a
-                                                href="#"
-                                                className="text-xs text-gray-500 hover:text-gray-700 transition-colors font-semibold"
-                                            >
-                                                {link}
-                                            </a>
+                                            {link === 'We are hiring' ? (
+                                                <Link
+                                                    to="/team"
+                                                    className="text-xs text-gray-500 hover:text-gray-700 transition-colors font-semibold"
+                                                >
+                                                    {link}
+                                                </Link>
+                                            ) : (
+                                                <a
+                                                    href="#"
+                                                    className="text-xs text-gray-500 hover:text-gray-700 transition-colors font-semibold"
+                                                >
+                                                    {link}
+                                                </a>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
