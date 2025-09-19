@@ -186,9 +186,9 @@ export default function Header() {
 
 
                             <Link to="/about" className="hover:text-black">About</Link>
-                            <Link to="/blog" className="hover:text-black">Blog</Link>
+                            <Link to="/team" className="hover:text-black">Team</Link>
+                            <Link to="/pricing" className="hover:text-black">Pricing</Link>
                             <Link to="/contact" className="hover:text-black">Contact</Link>
-                            <Link to="/pages" className="hover:text-black">Pages</Link>
                         </nav>
                     </div>
 
@@ -256,6 +256,7 @@ export default function Header() {
                     <Link to="/shop" className="font-medium hover:text-black">Shop</Link>
                     <Link to="/product" className="font-medium hover:text-black">Product</Link>
                     <Link to="/pricing" className="font-medium hover:text-black">Pricing</Link>
+                    <Link to="/team" className="font-medium hover:text-black">Team</Link>
                     <Link to="/contact" className="font-medium hover:text-black">Contact</Link>
                 </nav>
             </div>

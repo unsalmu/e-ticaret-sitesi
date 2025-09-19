@@ -8,6 +8,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage'
 import Footer from "./Layout/Footer"
 import ContactPage from './pages/ContactPage'
 import TeamPage from './pages/TeamPage'
+import PricingPage from './pages/PricingPage'
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/product" component={ProductDetailsPage} />
         <Route exact path="/contact" component={ContactPage} />
         <Route exact path="/team" component={TeamPage} />
+        <Route exact path="/pricing" component={PricingPage} />
       </Switch>
       <Footer />
     </BrowserRouter>
