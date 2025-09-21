@@ -22,7 +22,7 @@ export default function TeamMembers() {
   const members = Array.from({ length: 9 }, () => ({ name: "Username", role: "Profession" }))
   return (
     <section className="bg-white px-30">
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <h2 className="text-2xl md:text-3xl font-extrabold text-center text-[#252B42] mb-10 py-5">Meet Our Team</h2>
 
         {/* Flex rows (no grid) */}

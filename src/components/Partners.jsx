@@ -9,7 +9,7 @@ export default function Partners() {
   const brands = [b1, b2, b3, b4, b5, b6]
   return (
     <section className="px-4">
-      <div className="max-w-7xl mx-auto py-12">
+      <div className="max-w-7xl mx-auto px-20 py-12">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center">
           {brands.map((src, i) => (
             <img
