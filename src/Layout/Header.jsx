@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react"
+import { useDispatch, useSelector } from 'react-redux'
+import md5 from '../lib/md5'
 import { Link } from "react-router-dom"
+import { fetchCategoriesIfNeeded } from '../store/actions/productActions'
+import { logout } from '../store/actions/clientActions'
 import {
     Search,
     ShoppingCart,
@@ -17,14 +21,32 @@ import {
 export default function Header() {
     const [open, setOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
+    const [userMenuOpen, setUserMenuOpen] = useState(false)
 
     const [shopOpen, setShopOpen] = useState(false)
     const shopRef = useRef(null)
     const closeTimer = useRef(null)
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.client.user)
+    const categories = useSelector(state => {
+        const productState = state.product || {}
+        return productState.categories || []
+    })
 
     useEffect(() => {
-        document.documentElement.style.setProperty('--mobile-menu-offset', open ? '200px' : '0px')
+        document.documentElement.style.setProperty('--mobile-menu-offset', open ? '140px' : '0px')
     }, [open])
+
+    // Load categories for the dropdown once
+    useEffect(() => {
+        dispatch(fetchCategoriesIfNeeded())
+    }, [dispatch])
+
+    const handleLogout = () => {
+        dispatch(logout())
+        setUserMenuOpen(false)
+        setOpen(false)
+    }
 
     const handleShopEnter = () => {
         if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -34,8 +56,15 @@ export default function Header() {
         closeTimer.current = setTimeout(() => setShopOpen(false), 120)
     }
 
-
-
+    // Helpers for category links
+    const slugify = (s='') => s.toLowerCase()
+        .replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c')
+        .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')
+    const genderPath = g => g === 'k' ? 'kadin' : 'erkek'
+    const topWomen = (Array.isArray(categories) ? categories.filter(c=>c.gender==='k') : [])
+        .sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,5)
+    const topMen = (Array.isArray(categories) ? categories.filter(c=>c.gender!=='k') : [])
+        .sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,5)
 
     return (
         <>
@@ -159,10 +188,22 @@ export default function Header() {
                                                 <div className="min-w-[160px]">
                                                     <div className="text-sm font-bold text-[#252B42] mb-6">Kadın</div>
                                                     <ul className="flex flex-col gap-2 text-gray-500">
-                                                        <li><Link to="/shop/women/bags" className="hover:text-black">Bags</Link></li>
-                                                        <li><Link to="/shop/women/belts" className="hover:text-black">Belts</Link></li>
-                                                        <li><Link to="/shop/women/cosmetics" className="hover:text-black">Cosmetics</Link></li>
-                                                        <li><Link to="/shop/women/hats" className="hover:text-black">Hats</Link></li>
+                                                        {topWomen.length > 0 ? topWomen.map(cat => (
+                                                            <li key={cat.id}>
+                                                                <Link
+                                                                    to={`/shop/kadin/${slugify(cat.title)}/${cat.id}`}
+                                                                    className="hover:text-black"
+                                                                >
+                                                                    {cat.title}
+                                                                </Link>
+                                                            </li>
+                                                        )) : (
+                                                            <>
+                                                                <li><Link to="/shop/kadin/ayakkabi/1" className="hover:text-black">Ayakkabı</Link></li>
+                                                                <li><Link to="/shop/kadin/giyim/2" className="hover:text-black">Giyim</Link></li>
+                                                                <li><Link to="/shop/kadin/aksesuar/3" className="hover:text-black">Aksesuar</Link></li>
+                                                            </>
+                                                        )}
                                                     </ul>
                                                 </div>
 
@@ -170,10 +211,22 @@ export default function Header() {
                                                 <div className="min-w-[160px]">
                                                     <div className="text-sm font-bold text-[#252B42] mb-6">Erkek</div>
                                                     <ul className="flex flex-col gap-2 text-gray-500">
-                                                        <li><Link to="/shop/men/bags" className="hover:text-black">Bags</Link></li>
-                                                        <li><Link to="/shop/men/belts" className="hover:text-black">Belts</Link></li>
-                                                        <li><Link to="/shop/men/cosmetics" className="hover:text-black">Cosmetics</Link></li>
-                                                        <li><Link to="/shop/men/hats" className="hover:text-black">Hats</Link></li>
+                                                        {topMen.length > 0 ? topMen.map(cat => (
+                                                            <li key={cat.id}>
+                                                                <Link
+                                                                    to={`/shop/erkek/${slugify(cat.title)}/${cat.id}`}
+                                                                    className="hover:text-black"
+                                                                >
+                                                                    {cat.title}
+                                                                </Link>
+                                                            </li>
+                                                        )) : (
+                                                            <>
+                                                                <li><Link to="/shop/erkek/ayakkabi/4" className="hover:text-black">Ayakkabı</Link></li>
+                                                                <li><Link to="/shop/erkek/gomlek/5" className="hover:text-black">Gömlek</Link></li>
+                                                                <li><Link to="/shop/erkek/pantolon/6" className="hover:text-black">Pantolon</Link></li>
+                                                            </>
+                                                        )}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -193,10 +246,20 @@ export default function Header() {
                     </div>
 
                     {/* Right icons */}
-                    <div className="hidden md:flex items-center font-bold text-sm text-[#23A6F0]">
-                        <Link to="/login" className="hover:underline">
-                            Login / Register
-                        </Link>
+                    <div className="hidden md:flex items-center font-bold text-sm text-[#23A6F0] gap-3">
+                        {user ? (
+                          <div className="flex items-center gap-2 text-[#252B42]">
+                            <img src={`https://www.gravatar.com/avatar/${md5((user.email||'').trim().toLowerCase())}?d=identicon&s=28`} alt="avatar" className="w-7 h-7 rounded-full"/>
+                            <span className="text-sm font-bold">{user.name || user.email}</span>
+                            <button onClick={() => dispatch(logout())} className="ml-2 text-xs text-[#23A6F0] underline">Logout</button>
+                          </div>
+                        ) : (
+                          <>
+                            <Link to="/login" className="hover:underline">Login</Link>
+                            <span className="text-gray-400">/</span>
+                            <Link to="/signup" className="hover:underline">Sign Up</Link>
+                          </>
+                        )}
                         <div className="relative">
                             {!searchOpen ? (
                                 <button 
@@ -226,7 +289,7 @@ export default function Header() {
                         <Link to="/cart" aria-label="Cart" className="flex items-center p-2 rounded hover:bg-gray-100">
                             <ShoppingCart className="w-4 h-4" />
                             {/* örnek badge */}
-                            <span className="text-[11px] px-1.5 py-0.5">
+                            <span className="text-[11px] px-0.5 py-0.5">
                                 1
                             </span>
                         </Link>
@@ -236,7 +299,7 @@ export default function Header() {
                             className="flex items-center p-2 rounded hover:bg-gray-100"
                         >
                             <Heart className="w-4 h-4" />
-                            <span className="text-[11px] px-1.5 py-0.5">
+                            <span className="text-[11px] px-0.5 py-0.5">
                                 1
                             </span>
                         </Link>
@@ -245,19 +308,26 @@ export default function Header() {
             </header>
 
             {/* MOBILE MENU - Outside fixed header to push content */}
-            <div
-                data-mobile-menu
-                className={`md:hidden fixed top-[72px] left-0 w-full z-30 bg-white transition-all duration-300 overflow-hidden
+                <div
+                    data-mobile-menu
+                    className={`md:hidden fixed top-[72px] left-0 w-full z-30 bg-white transition-all duration-300 overflow-hidden
                     ${open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-            >
+                >
                 {/* menu links */}
                 <nav className="flex flex-col gap-6 px-6 py-8 text-2xl text-gray-600 items-center text-center">
                     <Link to="/" className="hover:text-black">Home</Link>
                     <Link to="/shop" className="font-medium hover:text-black">Shop</Link>
                     <Link to="/product" className="font-medium hover:text-black">Product</Link>
-                    <Link to="/pricing" className="font-medium hover:text-black">Pricing</Link>
-                    <Link to="/team" className="font-medium hover:text-black">Team</Link>
                     <Link to="/contact" className="font-medium hover:text-black">Contact</Link>
+                    {user ? (
+                        <button onClick={() => { dispatch(logout()); setOpen(false) }} className="font-medium hover:text-black">Logout</button>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Link to="/signup" className="font-medium hover:text-black">Sign Up</Link>
+                            <span className="text-gray-400">/</span>
+                            <Link to="/login" className="font-medium hover:text-black">Login</Link>
+                        </div>
+                    )}
                 </nav>
             </div>
         </>

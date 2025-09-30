@@ -3,74 +3,136 @@ import ProductFilter from "../components/ProductFilter";
 import ProductGrid from "../components/ProductGrid";
 import Pagination from "../components/Pagination";
 import Partners from "../components/Partners";
-import product1 from "../assets/product-1.png";
-import product2 from "../assets/product-2.png";
-import product3 from "../assets/product-3.png";
-import product4 from "../assets/product-4.png";
-import product5 from "../assets/product-5.png";
-import product6 from "../assets/product-6.png";
-import product7 from "../assets/product-7.png";
-import product8 from "../assets/product-8.png";
-
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchProducts } from "../store/actions/productActions";
 
 export default function ShopPage() {
-  const allBase = [
-    product1,
-    product2,
-    product3,
-    product4,
-    product5,
-    product6,
-    product7,
-    product8,
-  ]
-
-  // Build 36 items for 3 pages of 12 each (per design)
-  const allProducts = useMemo(() => {
-    const items = []
-    for (let i = 0; i < 36; i++) {
-      const idx = i % allBase.length
-      items.push({
-        id: i + 1,
-        name: "Graphic Design",
-        department: "English Department",
-        image: allBase[idx],
-        originalPrice: "16.48",
-        price: "6.48",
-        colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-      })
-    }
-    return items
-  }, [])
+  const dispatch = useDispatch()
+  const { productList, total, fetchState } = useSelector(state => state.product)
+  const { categoryId } = useParams()
 
   const [view, setView] = useState("grid")
-  const [sort, setSort] = useState("popularity")
+  const [sort, setSort] = useState("")
+  const [filter, setFilter] = useState("")
+  const [tempFilter, setTempFilter] = useState("") // For input before applying
   const [page, setPage] = useState(1)
   const pageSize = 12
-  const pages = Math.ceil(allProducts.length / pageSize)
 
-  const pageItems = useMemo(() => {
-    const start = (page - 1) * pageSize
-    return allProducts.slice(start, start + pageSize)
-  }, [allProducts, page])
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(1)
+  }, [categoryId, sort, filter])
+
+  // Apply filter with debounce when sort changes
+  useEffect(() => {
+    if (sort) {
+      setFilter(tempFilter)
+    }
+  }, [sort, tempFilter])
+
+  // Sync tempFilter with actual filter on mount
+  useEffect(() => {
+    setTempFilter(filter)
+  }, [filter])
+
+  // Clear filters when categoryId changes
+  useEffect(() => {
+    if (categoryId) {
+      setSort("")
+      setFilter("")
+      setTempFilter("")
+    }
+  }, [categoryId])
+
+  // Build query parameters
+  const buildParams = useMemo(() => {
+    const params = {
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+    }
+
+    if (categoryId) params.category = categoryId
+    if (sort) params.sort = sort
+    if (filter.trim()) params.filter = filter.trim()
+
+    return params
+  }, [categoryId, sort, filter, page, pageSize])
+
+  // Fetch products when parameters change
+  useEffect(() => {
+    console.log('Fetching products with params:', buildParams)
+    dispatch(fetchProducts(buildParams))
+  }, [dispatch, buildParams])
+
+  const pages = Math.ceil(total / pageSize)
+  const isLoading = fetchState === 'FETCHING'
+
+  // Transform API products to match existing ProductGrid component format
+  const transformedProducts = useMemo(() => {
+    return (productList || []).map(product => ({
+      id: product.id,
+      name: product.name,
+      department: "Product", // Default since API doesn't have department
+      image: product.images?.[0]?.url || "/placeholder-image.jpg",
+      originalPrice: (product.price * 1.3).toFixed(2), // Mock original price
+      price: product.price.toFixed(2),
+      colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"], // Default colors
+      rating: product.rating,
+      stock: product.stock
+    }))
+  }, [productList])
 
   return (
     <div className="min-h-screen px-15 bg-gray-50">
       <ShopHero />
 
       <ProductFilter
-        total={allProducts.length}
+        total={total}
         view={view}
         onChangeView={(v) => setView(v)}
         sort={sort}
         onChangeSort={(s) => setSort(s)}
-        onOpenFilter={() => {}}
+        filter={tempFilter}
+        onChangeFilter={(f) => setTempFilter(f)}
+        onApplyFilter={() => setFilter(tempFilter)}
       />
 
-      <ProductGrid products={pageItems} view={view} />
+      {/* Loading Spinner */}
+      {isLoading && (
+        <div className="flex justify-center items-center py-20">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-4 border-[#23A6F0] border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-gray-600 font-medium">Loading products...</p>
+          </div>
+        </div>
+      )}
 
-      <Pagination page={page} pages={pages} onChange={setPage} />
+      {/* Products Grid */}
+      {!isLoading && (
+        <ProductGrid products={transformedProducts} view={view} />
+      )}
+
+      {/* Error State */}
+      {fetchState === 'FAILED' && !isLoading && (
+        <div className="flex justify-center items-center py-20">
+          <div className="text-center">
+            <p className="text-red-600 font-medium mb-4">Failed to load products</p>
+            <button
+              onClick={() => dispatch(fetchProducts({ limit: pageSize, offset: (page - 1) * pageSize }))}
+              className="px-4 py-2 bg-[#23A6F0] text-white rounded hover:bg-[#1d8bc4]"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!isLoading && pages > 1 && (
+        <Pagination page={page} pages={pages} onChange={setPage} />
+      )}
 
       <Partners />
     </div>

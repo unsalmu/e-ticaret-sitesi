@@ -15,9 +15,11 @@ export default function ProductFilter({
   total = 12,
   view = "grid",
   onChangeView = () => { },
-  sort = "popularity",
+  sort = "",
   onChangeSort = () => { },
-  onOpenFilter = () => { },
+  filter = "",
+  onChangeFilter = () => { },
+  onApplyFilter = () => { },
 }) {
   return (
     <section className="px-4 bg-white">
@@ -61,29 +63,39 @@ export default function ProductFilter({
             </div>
           </div>
 
-          {/* Right: sort + filter */}
-          <div className="flex items-center gap-3 justify-center md:justify-end">
+          {/* Right: filter input + sort + filter button */}
+          <div className="flex items-center gap-3 justify-center md:justify-end flex-wrap">
+            {/* Filter Input */}
+            <input
+              type="text"
+              value={filter}
+              onChange={(e) => onChangeFilter(e.target.value)}
+              placeholder="Filter products..."
+              className="w-40 sm:w-auto px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-600 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            />
+
+            {/* Sort Select */}
             <div className="relative block">
               <select
                 value={sort}
                 onChange={(e) => onChangeSort(e.target.value)}
                 className="w-40 sm:w-auto appearance-none pr-8 pl-4 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-600 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100"
               >
-                <option value="popularity">Popularity</option>
-                <option value="rating">Rating</option>
-                <option value="newest">Newest</option>
-                <option value="priceLow">Price: Low to High</option>
-                <option value="priceHigh">Price: High to Low</option>
+                <option value="">Sort by...</option>
+                <option value="price:asc">Price: Low to High</option>
+                <option value="price:desc">Price: High to Low</option>
+                <option value="rating:asc">Rating: Low to High</option>
+                <option value="rating:desc">Rating: High to Low</option>
               </select>
               <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
 
-            {/* Filter button */}
+            {/* Apply Filter button */}
             <button
-              onClick={onOpenFilter}
+              onClick={onApplyFilter}
               className="inline-flex items-center px-4 py-2 bg-[#23A6F0] text-white rounded-md text-sm font-bold hover:bg-[#23A6F0]/90"
             >
-              Filter
+              Apply Filter
             </button>
           </div>
         </div>
