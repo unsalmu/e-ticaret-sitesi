@@ -3,8 +3,20 @@ export default function Pagination({ page = 1, pages = 1, onChange = () => {} })
   const goPrev = () => onChange(Math.max(1, page - 1))
   const goNext = () => onChange(Math.min(pages, page + 1))
 
-  // Keep it simple: render 1..pages (small counts per design)
-  const items = Array.from({ length: pages }, (_, i) => i + 1)
+  // For large page counts, show only nearby pages
+  const getVisiblePages = () => {
+    if (pages <= 7) {
+      return Array.from({ length: pages }, (_, i) => i + 1)
+    }
+
+    const start = Math.max(1, page - 2)
+    const end = Math.min(pages, start + 4)
+    const adjustedStart = Math.max(1, end - 4)
+
+    return Array.from({ length: end - adjustedStart + 1 }, (_, i) => adjustedStart + i)
+  }
+
+  const items = getVisiblePages()
 
   return (
     <section className="px-4 bg-white">
@@ -25,6 +37,24 @@ export default function Pagination({ page = 1, pages = 1, onChange = () => {} })
               First
             </button>
 
+            {/* Show "1..." if current page range doesn't include page 1 */}
+            {pages > 7 && items[0] > 1 && (
+              <>
+                <button
+                  onClick={() => onChange(1)}
+                  className="w-12 h-10 text-sm font-bold border-r border-gray-300 !rounded-none bg-white text-[#23A6F0] hover:bg-blue-50"
+                  style={{ borderRadius: 0 }}
+                >
+                  1
+                </button>
+                {items[0] > 2 && (
+                  <span className="w-12 h-10 text-sm font-bold border-r border-gray-300 !rounded-none bg-white text-gray-400 flex items-center justify-center">
+                    ...
+                  </span>
+                )}
+              </>
+            )}
+
             {/* Page numbers */}
             {items.map((n) => (
               <button
@@ -40,6 +70,24 @@ export default function Pagination({ page = 1, pages = 1, onChange = () => {} })
                 {n}
               </button>
             ))}
+
+            {/* Show "...last" if current page range doesn't include last page */}
+            {pages > 7 && items[items.length - 1] < pages && (
+              <>
+                {items[items.length - 1] < pages - 1 && (
+                  <span className="w-12 h-10 text-sm font-bold border-r border-gray-300 !rounded-none bg-white text-gray-400 flex items-center justify-center">
+                    ...
+                  </span>
+                )}
+                <button
+                  onClick={() => onChange(pages)}
+                  className="w-12 h-10 text-sm font-bold border-r border-gray-300 !rounded-none bg-white text-[#23A6F0] hover:bg-blue-50"
+                  style={{ borderRadius: 0 }}
+                >
+                  {pages}
+                </button>
+              </>
+            )}
 
             {/* Next */}
             <button

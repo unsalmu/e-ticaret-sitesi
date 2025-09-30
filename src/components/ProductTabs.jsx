@@ -1,7 +1,7 @@
 import { useState } from "react"
 import detailImg from "../assets/card-item-product-detail.png"
 
-export default function ProductTabs() {
+export default function ProductTabs({ product }) {
   const [tab, setTab] = useState("description")
 
   const TabButton = ({ id, children }) => (
@@ -35,10 +35,12 @@ export default function ProductTabs() {
               </div>
               {/* Middle text */}
               <div className="w-full md:w-1/3">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">the quick fox jumps over</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{product?.name || "Product Description"}</h3>
                 <div className="text-sm text-gray-600 leading-relaxed space-y-4">
-                  <p>Met minim Mollie non desert Alamo est sit cliquey dolor do met sent. RELIT official consequat door ENIM RELIT Mollie.</p>
-                  <p>Excitation venial consequat sent nostrum met. Met minim Mollie non desert Alamo est sit cliquey dolor do met sent.</p>
+                  <p>{product?.description || "No description available for this product."}</p>
+                  {product?.description && (
+                    <p>This high-quality product offers excellent value and performance for your needs.</p>
+                  )}
                 </div>
               </div>
               {/* Right lists */}
@@ -66,10 +68,11 @@ export default function ProductTabs() {
           )}
 
           {tab === "additional" && (
-            <div className="text-sm text-gray-600">
-              <p>Material: Cotton 100%</p>
-              <p>Dimensions: 40 x 60 x 10 cm</p>
-              <p>Country: Italy</p>
+            <div className="text-sm text-gray-600 space-y-2">
+              <p><strong>Stock:</strong> {product?.stock > 0 ? `${product.stock} items available` : "Out of stock"}</p>
+              <p><strong>Rating:</strong> {product?.rating || 0}/5 stars</p>
+              <p><strong>Category:</strong> {product?.category_id ? `Category ID: ${product.category_id}` : "Uncategorized"}</p>
+              <p><strong>Product ID:</strong> {product?.id || "N/A"}</p>
             </div>
           )}
 

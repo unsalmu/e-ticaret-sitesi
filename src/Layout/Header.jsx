@@ -4,6 +4,7 @@ import md5 from '../lib/md5'
 import { Link } from "react-router-dom"
 import { fetchCategoriesIfNeeded } from '../store/actions/productActions'
 import { logout } from '../store/actions/clientActions'
+import ShoppingCartDropdown from '../components/ShoppingCartDropdown'
 import {
     Search,
     ShoppingCart,
@@ -22,16 +23,21 @@ export default function Header() {
     const [open, setOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
     const [userMenuOpen, setUserMenuOpen] = useState(false)
+    const [cartOpen, setCartOpen] = useState(false)
 
     const [shopOpen, setShopOpen] = useState(false)
     const shopRef = useRef(null)
     const closeTimer = useRef(null)
     const dispatch = useDispatch()
     const user = useSelector(state => state.client.user)
+    const { cart } = useSelector(state => state.cart)
     const categories = useSelector(state => {
         const productState = state.product || {}
         return productState.categories || []
     })
+
+    // Calculate total items in cart
+    const totalCartItems = cart.reduce((total, item) => total + item.count, 0)
 
     useEffect(() => {
         document.documentElement.style.setProperty('--mobile-menu-offset', open ? '140px' : '0px')
@@ -137,9 +143,24 @@ export default function Header() {
                                 </button>
                             </div>
                         )}
-                        <Link to="/cart" aria-label="Cart" className="p-2 rounded hover:bg-gray-100">
-                            <ShoppingCart className="w-5 h-5" />
-                        </Link>
+                        <div className="relative">
+                            <button
+                                onClick={() => setCartOpen(!cartOpen)}
+                                aria-label="Cart"
+                                className="p-2 rounded hover:bg-gray-100 flex items-center gap-1"
+                            >
+                                <ShoppingCart className="w-5 h-5" />
+                                {totalCartItems > 0 && (
+                                    <span className="text-[#23A6F0] text-xs font-bold">
+                                        {totalCartItems}
+                                    </span>
+                                )}
+                            </button>
+                            <ShoppingCartDropdown
+                                isOpen={cartOpen}
+                                onClose={() => setCartOpen(false)}
+                            />
+                        </div>
                         <button
                             aria-label="Menu"
                             onClick={() => setOpen(o => !o)}
@@ -286,13 +307,24 @@ export default function Header() {
                                 </div>
                             )}
                         </div>
-                        <Link to="/cart" aria-label="Cart" className="flex items-center p-2 rounded hover:bg-gray-100">
-                            <ShoppingCart className="w-4 h-4" />
-                            {/* örnek badge */}
-                            <span className="text-[11px] px-0.5 py-0.5">
-                                1
-                            </span>
-                        </Link>
+                        <div className="relative">
+                            <button
+                                onClick={() => setCartOpen(!cartOpen)}
+                                aria-label="Cart"
+                                className="flex items-center p-2 rounded hover:bg-gray-100 gap-1"
+                            >
+                                <ShoppingCart className="w-4 h-4" />
+                                {totalCartItems > 0 && (
+                                    <span className="text-[#23A6F0] text-xs font-bold">
+                                        {totalCartItems}
+                                    </span>
+                                )}
+                            </button>
+                            <ShoppingCartDropdown
+                                isOpen={cartOpen}
+                                onClose={() => setCartOpen(false)}
+                            />
+                        </div>
                         <Link
                             to="/wishlist"
                             aria-label="Wishlist"

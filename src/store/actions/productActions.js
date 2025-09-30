@@ -1,4 +1,4 @@
-import { SET_CATEGORIES, SET_PRODUCT_LIST, SET_TOTAL, SET_FETCH_STATE, SET_LIMIT, SET_OFFSET, SET_FILTER } from '../types/productTypes'
+import { SET_CATEGORIES, SET_PRODUCT_LIST, SET_TOTAL, SET_FETCH_STATE, SET_LIMIT, SET_OFFSET, SET_FILTER, SET_SELECTED_PRODUCT } from '../types/productTypes'
 import api from '../../lib/api'
 
 export const setCategories = (v) => ({ type: SET_CATEGORIES, payload: v })
@@ -8,6 +8,7 @@ export const setFetchState = (v) => ({ type: SET_FETCH_STATE, payload: v })
 export const setLimit = (v) => ({ type: SET_LIMIT, payload: v })
 export const setOffset = (v) => ({ type: SET_OFFSET, payload: v })
 export const setFilter = (v) => ({ type: SET_FILTER, payload: v })
+export const setSelectedProduct = (v) => ({ type: SET_SELECTED_PRODUCT, payload: v })
 
 export const fetchCategoriesIfNeeded = () => async (dispatch, getState) => {
   const { categories } = getState().product
@@ -36,6 +37,23 @@ export const fetchProducts = (params = {}) => async (dispatch) => {
     return { products, total }
   } catch (e) {
     console.error('Failed to fetch products:', e)
+    dispatch(setFetchState('FAILED'))
+    throw e
+  }
+}
+
+export const fetchProduct = (productId) => async (dispatch) => {
+  try {
+    dispatch(setFetchState('FETCHING'))
+    const res = await api.get(`/products/${productId}`)
+    const product = res.data || null
+
+    dispatch(setSelectedProduct(product))
+    dispatch(setFetchState('FETCHED'))
+
+    return product
+  } catch (e) {
+    console.error('Failed to fetch product:', e)
     dispatch(setFetchState('FAILED'))
     throw e
   }

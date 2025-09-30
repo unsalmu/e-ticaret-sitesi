@@ -1,16 +1,27 @@
-import { Star, Heart, ShoppingCart, Eye } from "lucide-react"
+import { Star, Heart, Eye } from "lucide-react"
+import { useDispatch } from 'react-redux'
+import { addProduct } from '../store/actions/cartActions'
 
-export default function ProductInfo({
-  title = "Floating Phone",
-  rating = 4.5,
-  reviews = 10,
-  price = 1139.33,
-  inStock = true,
-  description = "Met minim Mollie non desert Alamo est sit cliquey dolor do met sent. RELIT official consequat door ENIM RELIT Mollie. Excitation venial consequat sent nostrum met.",
-  colors = ["#23A6F0", "#23856D", "#E77C40", "#252B42"],
-}) {
+export default function ProductInfo({ product }) {
+  const dispatch = useDispatch()
+  if (!product) {
+    return <div className="w-full text-center py-8 text-gray-500">Product not found</div>
+  }
+
+  const title = product.name || "Product"
+  const rating = product.rating || 0
+  const reviews = product.rating || 0 // Could be improved with actual review count
+  const price = product.price || 0
+  const inStock = product.stock > 0
+  const description = product.description || "No description available"
+  const colors = ["#23A6F0", "#23856D", "#E77C40", "#252B42"] // Default colors
+
   const full = Math.floor(rating)
   const half = rating - full >= 0.5
+
+  const handleAddToCart = () => {
+    dispatch(addProduct(product))
+  }
 
   return (
     <div className="w-full">
@@ -59,14 +70,15 @@ export default function ProductInfo({
 
       {/* Actions */}
       <div className="flex items-center gap-3">
-        <button className="px-4 py-2 bg-[#23A6F0] text-white rounded text-sm font-bold hover:bg-[#23A6F0]/90">
-          Select Options
+        <button
+          onClick={handleAddToCart}
+          disabled={!inStock}
+          className="px-6 py-2 bg-[#23A6F0] text-white rounded text-sm font-bold hover:bg-[#23A6F0]/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        >
+          {inStock ? 'Add to Cart' : 'Out of Stock'}
         </button>
         <button className="w-9 h-9 flex items-center justify-center bg-white border border-gray-300 !rounded-full hover:bg-gray-50" aria-label="Add to wishlist" style={{ borderRadius: '9999px' }}>
           <Heart className="w-5 h-5 text-gray-700" />
-        </button>
-        <button className="w-9 h-9 flex items-center justify-center bg-white border border-gray-300 !rounded-full hover:bg-gray-50" aria-label="Add to cart" style={{ borderRadius: '9999px' }}>
-          <ShoppingCart className="w-5 h-5 text-gray-700" />
         </button>
         <button className="w-9 h-9 flex items-center justify-center bg-white border border-gray-300 !rounded-full hover:bg-gray-50" aria-label="Quick view" style={{ borderRadius: '9999px' }}>
           <Eye className="w-5 h-5 text-gray-700" />

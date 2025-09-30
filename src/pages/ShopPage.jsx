@@ -10,7 +10,7 @@ import { fetchProducts } from "../store/actions/productActions";
 
 export default function ShopPage() {
   const dispatch = useDispatch()
-  const { productList, total, fetchState } = useSelector(state => state.product)
+  const { productList, total, fetchState, categories } = useSelector(state => state.product)
   const { categoryId } = useParams()
 
   const [view, setView] = useState("grid")
@@ -18,7 +18,7 @@ export default function ShopPage() {
   const [filter, setFilter] = useState("")
   const [tempFilter, setTempFilter] = useState("") // For input before applying
   const [page, setPage] = useState(1)
-  const pageSize = 12
+  const pageSize = 25 // API default
 
   // Reset page when filters change
   useEffect(() => {
@@ -63,6 +63,7 @@ export default function ShopPage() {
   // Fetch products when parameters change
   useEffect(() => {
     console.log('Fetching products with params:', buildParams)
+    console.log('Constructed URL would be: products?' + new URLSearchParams(buildParams).toString())
     dispatch(fetchProducts(buildParams))
   }, [dispatch, buildParams])
 
@@ -71,18 +72,25 @@ export default function ShopPage() {
 
   // Transform API products to match existing ProductGrid component format
   const transformedProducts = useMemo(() => {
-    return (productList || []).map(product => ({
-      id: product.id,
-      name: product.name,
-      department: "Product", // Default since API doesn't have department
-      image: product.images?.[0]?.url || "/placeholder-image.jpg",
-      originalPrice: (product.price * 1.3).toFixed(2), // Mock original price
-      price: product.price.toFixed(2),
-      colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"], // Default colors
-      rating: product.rating,
-      stock: product.stock
-    }))
-  }, [productList])
+    return (productList || []).map(product => {
+      // Find the category name by matching category_id
+      const category = (categories || []).find(cat => cat.id === product.category_id)
+      const categoryName = category?.title || "Product"
+
+      return {
+        id: product.id,
+        name: product.name,
+        department: categoryName, // Use actual category name
+        image: product.images?.[0]?.url || "/placeholder-image.jpg",
+        originalPrice: (product.price * 1.3).toFixed(2), // Mock original price
+        price: product.price.toFixed(2),
+        colors: ["#23A6F0", "#23856D", "#E77C40", "#252B42"], // Default colors
+        rating: product.rating,
+        stock: product.stock,
+        category: category // Pass the full category object
+      }
+    })
+  }, [productList, categories])
 
   return (
     <div className="min-h-screen px-15 bg-gray-50">
