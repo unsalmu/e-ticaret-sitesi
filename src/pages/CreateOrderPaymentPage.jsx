@@ -46,21 +46,47 @@ export default function CreateOrderPaymentPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    const payload = { ...form, expire_month: Number(form.expire_month), expire_year: Number(form.expire_year) }
-    if (editing && editing.id) {
-      await dispatch(updateCardRemote({ id: editing.id, ...payload }))
-    } else {
-      const created = await dispatch(createCard(payload))
-      if (created?.id) setSelectedCardId(created.id)
+    try {
+      const payload = { ...form, expire_month: Number(form.expire_month), expire_year: Number(form.expire_year) }
+      if (editing && editing.id) {
+        await dispatch(updateCardRemote({ id: editing.id, ...payload }))
+      } else {
+        // Create new card
+        await dispatch(createCard(payload))
+        // Refetch cards to ensure we have the latest list with proper IDs from server
+        const updatedCards = await dispatch(fetchCards())
+        if (updatedCards && updatedCards.length > 0) {
+          // Select the newly created card - find by matching form data
+          const newCard = updatedCards.find(card =>
+            card.card_no === payload.card_no &&
+            card.name_on_card === payload.name_on_card &&
+            Number(card.expire_month) === payload.expire_month &&
+            Number(card.expire_year) === payload.expire_year
+          ) || updatedCards[updatedCards.length - 1]
+
+          if (newCard && newCard.id) {
+            setSelectedCardId(newCard.id)
+          }
+        }
+      }
+      setShowForm(false)
+      setEditing(null)
+    } catch (error) {
+      console.error('Error saving card:', error)
+      // You might want to show an error message to the user here
     }
-    setShowForm(false); setEditing(null)
   }
 
   const onDelete = async (c) => {
     if (!c?.id) return
     if (!confirm('Kart silinsin mi?')) return
-    await dispatch(deleteCardRemote(c.id))
-    if (selectedCardId === c.id) setSelectedCardId(null)
+    try {
+      await dispatch(deleteCardRemote(c.id))
+      // Reset selected card if the deleted card was selected
+      if (selectedCardId === c.id) setSelectedCardId(null)
+    } catch (error) {
+      console.error('Error deleting card:', error)
+    }
   }
 
   const handlePayment = async () => {

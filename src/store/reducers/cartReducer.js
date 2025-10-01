@@ -10,7 +10,10 @@ import {
   CREATE_ORDER_START,
   CREATE_ORDER_SUCCESS,
   CREATE_ORDER_FAIL,
-  RESET_ORDER_STATE
+  RESET_ORDER_STATE,
+  FETCH_ORDERS_START,
+  FETCH_ORDERS_SUCCESS,
+  FETCH_ORDERS_FAIL
 } from '../types/cartTypes'
 
 const initialState = {
@@ -19,7 +22,10 @@ const initialState = {
   address: {},
   orderState: 'idle', // 'idle', 'loading', 'success', 'error'
   orderError: null,
-  lastOrder: null
+  lastOrder: null,
+  orders: [],
+  ordersState: 'idle', // 'idle', 'loading', 'success', 'error'
+  ordersError: null
 }
 
 export default function cartReducer(state = initialState, action) {
@@ -116,6 +122,28 @@ export default function cartReducer(state = initialState, action) {
         orderState: 'idle',
         orderError: null,
         lastOrder: null
+      }
+
+    case FETCH_ORDERS_START:
+      return {
+        ...state,
+        ordersState: 'loading',
+        ordersError: null
+      }
+
+    case FETCH_ORDERS_SUCCESS:
+      return {
+        ...state,
+        ordersState: 'success',
+        ordersError: null,
+        orders: action.payload
+      }
+
+    case FETCH_ORDERS_FAIL:
+      return {
+        ...state,
+        ordersState: 'error',
+        ordersError: action.payload
       }
 
     default:

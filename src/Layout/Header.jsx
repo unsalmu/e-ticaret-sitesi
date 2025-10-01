@@ -269,10 +269,45 @@ export default function Header() {
                     {/* Right icons */}
                     <div className="hidden md:flex items-center font-bold text-sm text-[#23A6F0] gap-3">
                         {user ? (
-                          <div className="flex items-center gap-2 text-[#252B42]">
-                            <img src={`https://www.gravatar.com/avatar/${md5((user.email||'').trim().toLowerCase())}?d=identicon&s=28`} alt="avatar" className="w-7 h-7 rounded-full"/>
-                            <span className="text-sm font-bold">{user.name || user.email}</span>
-                            <button onClick={() => dispatch(logout())} className="ml-2 text-xs text-[#23A6F0] underline">Logout</button>
+                          <div className="relative">
+                            <button
+                              onClick={() => setUserMenuOpen(!userMenuOpen)}
+                              className="flex items-center gap-2 text-[#252B42] hover:bg-gray-100 rounded-lg px-2 py-1 transition-colors"
+                            >
+                              <img src={`https://www.gravatar.com/avatar/${md5((user.email||'').trim().toLowerCase())}?d=identicon&s=28`} alt="avatar" className="w-7 h-7 rounded-full"/>
+                              <span className="text-sm font-bold">{user.name || user.email}</span>
+                              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+
+                            {/* User Dropdown Menu */}
+                            {userMenuOpen && (
+                              <>
+                                <div
+                                  className="fixed inset-0 z-10"
+                                  onClick={() => setUserMenuOpen(false)}
+                                />
+                                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                                  <div className="py-2">
+                                    <Link
+                                      to="/previous-orders"
+                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                      onClick={() => setUserMenuOpen(false)}
+                                    >
+                                      My Orders
+                                    </Link>
+                                    <hr className="my-1 border-gray-100" />
+                                    <button
+                                      onClick={handleLogout}
+                                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+                                    >
+                                      Logout
+                                    </button>
+                                  </div>
+                                </div>
+                              </>
+                            )}
                           </div>
                         ) : (
                           <>

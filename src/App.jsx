@@ -10,6 +10,7 @@ import Footer from "./Layout/Footer"
 import ProtectedRoute from './components/ProtectedRoute'
 import CreateOrderPage from './pages/CreateOrderPage'
 import CreateOrderPaymentPage from './pages/CreateOrderPaymentPage'
+import PreviousOrdersPage from './pages/PreviousOrdersPage'
 import ContactPage from './pages/ContactPage'
 import TeamPage from './pages/TeamPage'
 import PricingPage from './pages/PricingPage'
@@ -29,6 +30,7 @@ function App() {
         <Route exact path="/cart" component={CartPage} />
         <ProtectedRoute exact path="/order" component={CreateOrderPage} />
         <ProtectedRoute exact path="/order/payment" component={CreateOrderPaymentPage} />
+        <ProtectedRoute exact path="/previous-orders" component={PreviousOrdersPage} />
         <Route path="/shop/:gender/:categoryName/:categoryId/:productNameSlug/:productId" component={ProductDetailsPage} />
         <Route path="/shop/:gender/:categoryName/:categoryId" component={ShopPage} />
         <Route path="/product/:id" component={ProductDetailsPage} />

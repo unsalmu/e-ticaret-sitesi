@@ -45,22 +45,50 @@ export default function CreateOrderPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    if (editing && editing.id) {
-      await dispatch(updateAddressRemote({ id: editing.id, ...form }))
-    } else {
-      const created = await dispatch(createAddress(form))
-      if (created && created.id) setSelectedShipId(created.id)
+    try {
+      if (editing && editing.id) {
+        await dispatch(updateAddressRemote({ id: editing.id, ...form }))
+      } else {
+        // Create new address
+        await dispatch(createAddress(form))
+        // Refetch addresses to ensure we have the latest list with proper IDs from server
+        const updatedAddresses = await dispatch(fetchAddresses())
+        if (updatedAddresses && updatedAddresses.length > 0) {
+          // Select the newly created address - find by matching form data
+          const newAddress = updatedAddresses.find(addr =>
+            addr.title === form.title &&
+            addr.name === form.name &&
+            addr.surname === form.surname &&
+            addr.phone === form.phone
+          ) || updatedAddresses[updatedAddresses.length - 1]
+
+          if (newAddress && newAddress.id) {
+            setSelectedShipId(newAddress.id)
+            if (billingSame) {
+              setSelectedBillId(newAddress.id)
+            }
+          }
+        }
+      }
+      setShowForm(false)
+      setEditing(null)
+    } catch (error) {
+      console.error('Error saving address:', error)
+      // You might want to show an error message to the user here
     }
-    setShowForm(false)
-    setEditing(null)
   }
 
   const onDelete = async (addr) => {
     if (!addr?.id) return
     if (!confirm('Bu adres silinsin mi?')) return
-    await dispatch(deleteAddressRemote(addr.id))
-    if (selectedShipId === addr.id) setSelectedShipId(null)
-    if (selectedBillId === addr.id) setSelectedBillId(null)
+    try {
+      await dispatch(deleteAddressRemote(addr.id))
+      // Reset selected addresses if the deleted address was selected
+      if (selectedShipId === addr.id) setSelectedShipId(null)
+      if (selectedBillId === addr.id) setSelectedBillId(null)
+    } catch (error) {
+      console.error('Error deleting address:', error)
+    }
   }
 
   return (

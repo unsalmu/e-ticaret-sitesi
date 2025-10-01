@@ -10,7 +10,10 @@ import {
   CREATE_ORDER_START,
   CREATE_ORDER_SUCCESS,
   CREATE_ORDER_FAIL,
-  RESET_ORDER_STATE
+  RESET_ORDER_STATE,
+  FETCH_ORDERS_START,
+  FETCH_ORDERS_SUCCESS,
+  FETCH_ORDERS_FAIL
 } from '../types/cartTypes'
 import api from '../../lib/api'
 
@@ -30,6 +33,11 @@ export const createOrderStart = () => ({ type: CREATE_ORDER_START })
 export const createOrderSuccess = (order) => ({ type: CREATE_ORDER_SUCCESS, payload: order })
 export const createOrderFail = (error) => ({ type: CREATE_ORDER_FAIL, payload: error })
 export const resetOrderState = () => ({ type: RESET_ORDER_STATE })
+
+// Fetch orders action creators
+export const fetchOrdersStart = () => ({ type: FETCH_ORDERS_START })
+export const fetchOrdersSuccess = (orders) => ({ type: FETCH_ORDERS_SUCCESS, payload: orders })
+export const fetchOrdersFail = (error) => ({ type: FETCH_ORDERS_FAIL, payload: error })
 
 // Async order action
 export const createOrder = (orderData) => async (dispatch, getState) => {
@@ -78,6 +86,20 @@ export const createOrder = (orderData) => async (dispatch, getState) => {
   } catch (error) {
     console.error('Order creation failed:', error)
     dispatch(createOrderFail(error.response?.data?.message || error.message))
+    throw error
+  }
+}
+
+// Fetch user orders
+export const fetchOrders = () => async (dispatch) => {
+  try {
+    dispatch(fetchOrdersStart())
+    const response = await api.get('/order')
+    dispatch(fetchOrdersSuccess(response.data || []))
+    return response.data
+  } catch (error) {
+    console.error('Failed to fetch orders:', error)
+    dispatch(fetchOrdersFail(error.response?.data?.message || error.message))
     throw error
   }
 }

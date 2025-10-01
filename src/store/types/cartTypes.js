@@ -15,3 +15,8 @@ export const CREATE_ORDER_SUCCESS = 'cart/CREATE_ORDER_SUCCESS'
 export const CREATE_ORDER_FAIL = 'cart/CREATE_ORDER_FAIL'
 export const RESET_ORDER_STATE = 'cart/RESET_ORDER_STATE'
 
+// Fetch orders actions
+export const FETCH_ORDERS_START = 'cart/FETCH_ORDERS_START'
+export const FETCH_ORDERS_SUCCESS = 'cart/FETCH_ORDERS_SUCCESS'
+export const FETCH_ORDERS_FAIL = 'cart/FETCH_ORDERS_FAIL'
+
